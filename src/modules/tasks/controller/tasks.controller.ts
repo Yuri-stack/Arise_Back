@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { TasksService } from "../services/tasks.service";
-import { Task } from "../entities/tasks.entity";
+import { TaskDTO } from "../entities/taskDTO.entity";
 
 @Controller("/tasks")
 export class TasksController {
@@ -8,19 +8,19 @@ export class TasksController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    async findAllTasks(): Promise<Task[]> {
+    async findAllTasks(): Promise<TaskDTO[]> {
         return await this.tasksService.findAll();
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() task: Task): Promise<Task> {
+    async create(@Body() task: TaskDTO): Promise<TaskDTO> {
         return await this.tasksService.create(task);
     }
 
     @Put()
     @HttpCode(HttpStatus.OK)
-    async update(@Body() task: Task): Promise<Task> {
+    async update(@Body() task: TaskDTO): Promise<TaskDTO> {
         return this.tasksService.update(task);
     }
 

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Task } from "../entities/tasks.entity";
+import { TaskDTO } from "../entities/taskDTO.entity";
 import { PrismaService } from "src/prisma/prisma.service";
 import { difficultyMap } from "src/constants/task.constants";
 
@@ -7,16 +7,16 @@ import { difficultyMap } from "src/constants/task.constants";
 export class TasksService {
     constructor(private prisma: PrismaService) { }
 
-    async findAll(): Promise<Task[]> {
+    async findAll(): Promise<TaskDTO[]> {
         return await this.prisma.tasks.findMany();
     }
 
-    async findById(taskId: string): Promise<Task> {
+    async findById(taskId: string): Promise<TaskDTO> {
         return await this.prisma.tasks.findUnique({ where: { id: taskId } })
     }
 
-    async create(task: Task): Promise<Task> {
-        const difficultUpdated: string = difficultyMap[task.type] || "0";
+    async create(task: TaskDTO): Promise<TaskDTO> {
+        const difficultUpdated: number = difficultyMap[task.type] || 0;
 
         return await this.prisma.tasks.create({
             data: {
@@ -27,7 +27,7 @@ export class TasksService {
         });
     }
 
-    async update(task: Task): Promise<Task> {
+    async update(task: TaskDTO): Promise<TaskDTO> {
         let taskSearched = await this.findById(task.id);
 
         if (!taskSearched || !task.id)

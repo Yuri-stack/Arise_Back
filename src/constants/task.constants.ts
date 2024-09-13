@@ -5,9 +5,9 @@ export enum TaskType {
     EMERGENTE = 'Emergente',
 };
 
-export const difficultyMap: Record<TaskType, string> = {
-    [TaskType.DIARIA]: "5",
-    [TaskType.SEMANAL]: "10",
-    [TaskType.MENSAL]: "20",
-    [TaskType.EMERGENTE]: "40",
+export const difficultyMap: Record<TaskType, number> = {
+    [TaskType.DIARIA]: 5,
+    [TaskType.SEMANAL]: 10,
+    [TaskType.MENSAL]: 20,
+    [TaskType.EMERGENTE]: 40,
 };

@@ -15,10 +15,10 @@ datasource db {
 
 model Tasks {
   id          String   @id @default(uuid())
-  name        String
-  description String
-  difficult   String
-  status      String
+  name        String   @db.VarChar(50)
+  description String   @db.VarChar(100)
+  difficult   Int?
+  status      String?
   type        String
   createdAt   DateTime @default(now())
 }
