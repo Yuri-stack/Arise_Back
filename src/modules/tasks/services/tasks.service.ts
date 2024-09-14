@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { TaskDTO } from "../entities/taskDTO.entity";
 import { PrismaService } from "src/prisma/prisma.service";
-import { difficultyMap } from "src/constants/task.constants";
+import { setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
 
 @Injectable()
 export class TasksService {
@@ -16,31 +16,31 @@ export class TasksService {
     }
 
     async create(task: TaskDTO): Promise<TaskDTO> {
-        const difficultUpdated: number = difficultyMap[task.type] || 0;
+        validateTypeOfTask(task.type)
 
         return await this.prisma.tasks.create({
             data: {
                 ...task,
-                difficult: difficultUpdated,
+                difficult: setLevelOfDifficultToTask(task),
                 status: "Pendente"
             }
         });
     }
 
     async update(task: TaskDTO): Promise<TaskDTO> {
+        validateTypeOfTask(task.type);
+
         let taskSearched: TaskDTO = await this.findById(task.id);
-        const tiposValidos = ['Diária', 'Semanal', 'Mensal', 'Emergente'];
 
         if (!taskSearched || !task.id)
             throw new HttpException("Tarefa não encontrada!", HttpStatus.NOT_FOUND);
 
-        if (!tiposValidos.includes(task.type)) {
-            throw new HttpException("Tipo de Tarefa inválido!", HttpStatus.NOT_FOUND);
-        }
-
         return await this.prisma.tasks.update({
             where: { id: task.id },
-            data: task
+            data: {
+                ...task,
+                difficult: setLevelOfDifficultToTask(task)
+            }
         });
     }
 
