@@ -28,10 +28,15 @@ export class TasksService {
     }
 
     async update(task: TaskDTO): Promise<TaskDTO> {
-        let taskSearched = await this.findById(task.id);
+        let taskSearched: TaskDTO = await this.findById(task.id);
+        const tiposValidos = ['Diária', 'Semanal', 'Mensal', 'Emergente'];
 
         if (!taskSearched || !task.id)
             throw new HttpException("Tarefa não encontrada!", HttpStatus.NOT_FOUND);
+
+        if (!tiposValidos.includes(task.type)) {
+            throw new HttpException("Tipo de Tarefa inválido!", HttpStatus.NOT_FOUND);
+        }
 
         return await this.prisma.tasks.update({
             where: { id: task.id },
@@ -40,7 +45,7 @@ export class TasksService {
     }
 
     async delete(taskId: string): Promise<void> {
-        let taskSearched = await this.findById(taskId);
+        let taskSearched: TaskDTO = await this.findById(taskId);
 
         if (!taskSearched || !taskId)
             throw new HttpException("Tarefa não existe!", HttpStatus.NOT_FOUND);
@@ -48,7 +53,19 @@ export class TasksService {
         await this.prisma.tasks.delete({ where: { id: taskId } });
     }
 
-    async completionTask(taskId: string) {
+    async completeTask(taskId: string) {
+        let taskSearched: TaskDTO = await this.findById(taskId);
+
+        if (!taskSearched || !taskId)
+            throw new HttpException("A tarefa não existe!", HttpStatus.NOT_FOUND);
+
+        return await this.prisma.tasks.update({
+            where: { id: taskId },
+            data: {
+                ...taskSearched,
+                status: "Completa"
+            }
+        })
 
     }
 }
