@@ -21,4 +21,5 @@ export class TaskDTO {
   type: string
 
   createdAt: Date
+  expirationAt?: string
 }
