@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { TaskDTO } from "../entities/taskDTO.entity";
 import { PrismaService } from "src/prisma/prisma.service";
-import { setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
+import { setExpirationDate, setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
 
 @Injectable()
 export class TasksService {
@@ -22,6 +22,7 @@ export class TasksService {
             data: {
                 ...task,
                 difficult: setLevelOfDifficultToTask(task),
+                expirationAt: setExpirationDate(task),
                 status: "Pendente"
             }
         });

@@ -11,3 +11,5 @@ export const difficultyMap: Record<TaskType, number> = {
     [TaskType.MENSAL]: 20,
     [TaskType.EMERGENTE]: 40,
 };
+
+export const validTypes = ['Diária', 'Semanal', 'Mensal', 'Emergente'];
