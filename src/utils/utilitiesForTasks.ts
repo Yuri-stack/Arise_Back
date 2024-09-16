@@ -14,7 +14,6 @@ export function validateTypeOfTask(taskType: string) {
 }
 
 export function setExpirationDate(task: TaskDTO): string {
-
     // Define a data de criação da tarefa
     task.createdAt = new Date();
     const creationDate: Date = task.createdAt;

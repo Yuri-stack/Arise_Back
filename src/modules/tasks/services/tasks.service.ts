@@ -54,19 +54,35 @@ export class TasksService {
         await this.prisma.tasks.delete({ where: { id: taskId } });
     }
 
-    async completeTask(taskId: string) {
+    async completeTask(taskId: string): Promise<TaskDTO> {
         let taskSearched: TaskDTO = await this.findById(taskId);
 
         if (!taskSearched || !taskId)
             throw new HttpException("A tarefa não existe!", HttpStatus.NOT_FOUND);
 
+        return await this.updateStatusTask(taskId, "Completa")
+    }
+
+    async updateStatusTaskIfLate(): Promise<void> {
+        const actualDate: Date = new Date();
+        const tasks = await this.findAll();
+
+        const updatedPromises = tasks.map(async task => {
+            const expirationDate = new Date(task.expirationAt);
+
+            // Verifica se a tarefa está atrasada e não foi concluída
+            if ((actualDate > expirationDate) && task.status !== "Completa") {
+                await this.updateStatusTask(task.id, "Atrasada");
+            }
+
+        })
+        await Promise.all(updatedPromises);
+    }
+
+    private async updateStatusTask(taskId: string, status: string): Promise<TaskDTO> {
         return await this.prisma.tasks.update({
             where: { id: taskId },
-            data: {
-                ...taskSearched,
-                status: "Completa"
-            }
+            data: { status: status }
         })
-
     }
 }

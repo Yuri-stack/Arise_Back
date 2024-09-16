@@ -9,6 +9,7 @@ export class TasksController {
     @Get()
     @HttpCode(HttpStatus.OK)
     async findAllTasks(): Promise<TaskDTO[]> {
+        await this.tasksService.updateStatusTaskIfLate();
         return await this.tasksService.findAll();
     }
 
