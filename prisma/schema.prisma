@@ -23,3 +23,14 @@ model Tasks {
   createdAt    DateTime @default(now())
   expirationAt String?
 }
+
+model User {
+  id               String @id @default(uuid())
+  username         String @db.VarChar(50)
+  email            String
+  role             String
+  level            Int
+  photo            String
+  progress         Int
+  reachToNextLevel Int
+}
