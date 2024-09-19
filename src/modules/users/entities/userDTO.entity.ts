@@ -9,13 +9,14 @@ export class UserDTO {
     })
     username: string;
 
-    @IsEmail()
+    @IsNotEmpty({ message: 'O campo e-mail não pode estar vazio.' })
+    @IsEmail({}, { message: 'Insira um e-mail válido!' })
     email: string;
 
     role?: string;
     level?: number;
 
-    @IsNotEmpty({ message: 'O campo foto deve não pode estar vazio.' })
+    @IsNotEmpty({ message: 'O campo foto não pode estar vazio.' })
     @Length(1, 500, {
         message: 'O campo foto deve ter entre 1 e 500 caracteres.',
     })

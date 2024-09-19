@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `user` MODIFY `role` VARCHAR(191) NULL DEFAULT 'player',
+    MODIFY `level` INTEGER NULL DEFAULT 0,
+    MODIFY `progress` INTEGER NULL DEFAULT 0,
+    MODIFY `reachToNextLevel` INTEGER NULL DEFAULT 0;
