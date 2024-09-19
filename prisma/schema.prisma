@@ -16,18 +16,15 @@ model Tasks {
   type         String
   createdAt    DateTime @default(now())
   expirationAt String?
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id               String  @id @default(uuid())
-  username         String  @db.VarChar(50)
+  id               String @id @default(uuid())
+  username         String @db.VarChar(50)
   email            String
   role             String
   level            Int
   photo            String
   progress         Int
   reachToNextLevel Int
-  tasks            Tasks[]
 }
