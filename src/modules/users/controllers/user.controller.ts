@@ -15,7 +15,7 @@ export class UserController {
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
     async findUserById(@Param('id') userId: string): Promise<UserDTO> {
-        return await this.userService.findById(userId)
+        return await this.userService.findById(userId);
     }
 
     @Post()
