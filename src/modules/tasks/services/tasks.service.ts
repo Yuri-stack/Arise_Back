@@ -8,11 +8,11 @@ export class TasksService {
     constructor(private prisma: PrismaService) { }
 
     async findAll(): Promise<TaskDTO[]> {
-        return await this.prisma.tasks.findMany();
+        return await this.prisma.tasks.findMany({ include: { user: true } });
     }
 
     async findById(taskId: string): Promise<TaskDTO> {
-        return await this.prisma.tasks.findUnique({ where: { id: taskId } })
+        return await this.prisma.tasks.findUnique({ where: { id: taskId }, include: { user: true } })
     }
 
     async create(task: TaskDTO): Promise<TaskDTO> {
@@ -23,8 +23,12 @@ export class TasksService {
                 ...task,
                 difficult: setLevelOfDifficultToTask(task),
                 expirationAt: setExpirationDate(task),
-                status: "Pendente"
-            }
+                status: "Pendente",
+                user: {
+                    connect: { id: task.user.id }
+                }
+            },
+            include: { user: true }
         });
     }
 
@@ -40,8 +44,12 @@ export class TasksService {
             where: { id: task.id },
             data: {
                 ...task,
-                difficult: setLevelOfDifficultToTask(task)
-            }
+                difficult: setLevelOfDifficultToTask(task),
+                user: {
+                    connect: { id: task.user.id }
+                }
+            },
+            include: { user: true }
         });
     }
 
@@ -82,7 +90,8 @@ export class TasksService {
     private async updateStatusTask(taskId: string, status: string): Promise<TaskDTO> {
         return await this.prisma.tasks.update({
             where: { id: taskId },
-            data: { status: status }
+            data: { status: status },
+            include: { user: true }
         })
     }
 }

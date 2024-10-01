@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, Length } from "class-validator";
+import { TaskDTO } from "src/modules/tasks/entities/taskDTO.entity";
 
 export class UserDTO {
     id: string;
@@ -24,4 +25,6 @@ export class UserDTO {
 
     progress?: number;
     reachToNextLevel?: number;
+
+    // tasks: TaskDTO[];
 }
