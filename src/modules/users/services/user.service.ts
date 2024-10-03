@@ -11,11 +11,11 @@ export class UserService {
     constructor(private prisma: PrismaService) { }
 
     async findAll(): Promise<UserDTO[]> {
-        return await this.prisma.user.findMany();
+        return await this.prisma.user.findMany({ include: { tasks: true } })
     }
 
     async findById(userId: string): Promise<UserDTO> {
-        return await this.prisma.user.findUnique({ where: { id: userId } })
+        return await this.prisma.user.findUnique({ where: { id: userId }, include: { tasks: true } })
     }
 
     async create(user: UserDTO): Promise<UserDTO> {
