@@ -65,6 +65,9 @@ export class TasksService {
     async completeTask(taskId: string): Promise<TaskDTO> {
         let taskSearched: TaskDTO = await this.findById(taskId);
 
+        if (taskSearched.status === "Completa")
+            throw new HttpException("A tarefa já foi Concluída!", HttpStatus.BAD_REQUEST);
+
         if (!taskSearched || !taskId)
             throw new HttpException("A tarefa não existe!", HttpStatus.NOT_FOUND);
 
