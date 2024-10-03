@@ -2,9 +2,9 @@ import { Prisma } from "@prisma/client";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { PrismaService } from "src/prisma/prisma.service";
-import { isValidImage } from "src/utils/utilitiesForUsers";
 import { UserDTO } from "../../users/entities/userDTO.entity";
 import { TaskDTO } from "src/modules/tasks/entities/taskDTO.entity";
+import { calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
 
 @Injectable()
 export class UserService {
@@ -73,7 +73,7 @@ export class UserService {
 
         const updatedProgress = user.progress + task.difficult;
 
-        return await this.prisma.user.update({
+        await this.prisma.user.update({
             where: { id: user.id },
             data: {
                 progress: updatedProgress
@@ -82,12 +82,32 @@ export class UserService {
 
     }
 
-    // função que pega a quantidade de pontos para o proximo nivel (reachToNextLevel)
+    // private async levelUp(user: UserDTO) {
+    //     // if (user.progress >= user.reachToNextLevel) {
+    //     //     user.level += 1;
+    //     //     user.progress = user.progress - reachToNextLevel;
+    //     // }
 
-    // função que passa de nível
-    private async levelUp() {
+    // }
 
-    }
+    // async updateUserProgress(user: UserDTO) {
+    //     const currentLevel = user.level;
+    //     const reachToNextLevel = calculatePointsForNextLevel(currentLevel);
+
+    //     user.reachToNextLevel = reachToNextLevel;
+
+    //     if (user.progress >= user.reachToNextLevel) {
+    //         user.level += 1;
+    //         user.progress = user.progress - reachToNextLevel;
+    //     }
+
+    //     await this.prisma.user.update({
+    //         where: { id: user.id },
+    //         data: {
+    //             ...user
+    //         }
+    //     });
+    // }
 
     private async findUserByField(field: keyof UserDTO, value: string): Promise<UserDTO> {
         const allowedFields = ["id", "username", "email"];

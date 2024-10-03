@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from "@nestjs/common";
 import { UserDTO } from "../entities/userDTO.entity";
 import { UserService } from "../services/user.service";
+import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
 
 @Controller("/users")
 export class UserController {
@@ -12,7 +13,7 @@ export class UserController {
         return await this.userService.findAll();
     }
 
-    @Get('/:id')
+    @Get('id/:id')
     @HttpCode(HttpStatus.OK)
     async findUserById(@Param('id') userId: string): Promise<UserDTO> {
         return await this.userService.findById(userId);
@@ -20,14 +21,16 @@ export class UserController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() task: UserDTO): Promise<UserDTO> {
-        return await this.userService.create(task);
+    async create(@Body() user: UserDTO): Promise<UserDTO> {
+        const initialLevel = 1;
+        user.reachToNextLevel = calculatePointsForNextLevel(initialLevel);
+        return await this.userService.create(user);
     }
 
     @Put()
     @HttpCode(HttpStatus.OK)
-    async update(@Body() task: UserDTO): Promise<UserDTO> {
-        return this.userService.update(task);
+    async update(@Body() user: UserDTO): Promise<UserDTO> {
+        return this.userService.update(user);
     }
 
     @Delete('/:id')
