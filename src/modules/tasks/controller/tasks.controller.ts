@@ -20,6 +20,12 @@ export class TasksController {
         return await this.tasksService.findById(taskId)
     }
 
+    @Get('/status/:status')
+    @HttpCode(HttpStatus.OK)
+    async listTaskByStatus(@Param('status') status: string): Promise<TaskDTO[]> {
+        return await this.tasksService.listTasksByStatus(status);
+    }
+
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() task: TaskDTO): Promise<TaskDTO> {

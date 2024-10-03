@@ -15,6 +15,10 @@ export class TasksService {
         return await this.prisma.tasks.findUnique({ where: { id: taskId }, include: { user: true } })
     }
 
+    async listTasksByStatus(status: string): Promise<TaskDTO[]> {
+        return await this.prisma.tasks.findMany({ where: { status }, include: { user: true } });
+    }
+
     async create(task: TaskDTO): Promise<TaskDTO> {
         validateTypeOfTask(task.type)
 
