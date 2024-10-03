@@ -2,8 +2,9 @@ import { Prisma } from "@prisma/client";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { PrismaService } from "src/prisma/prisma.service";
-import { UserDTO } from "../../users/entities/userDTO.entity";
 import { isValidImage } from "src/utils/utilitiesForUsers";
+import { UserDTO } from "../../users/entities/userDTO.entity";
+import { TaskDTO } from "src/modules/tasks/entities/taskDTO.entity";
 
 @Injectable()
 export class UserService {
@@ -63,7 +64,23 @@ export class UserService {
         await this.prisma.user.delete({ where: { id: userId } });
     }
 
-    // função que pega o xp da tarefa e atualiza o progress
+    async getExperienceAndUpdateProgress(task: TaskDTO) {
+        let user: UserDTO = task.user;
+
+        if (task.status !== "Completa") {
+            throw new HttpException("Tarefa não concluída", HttpStatus.BAD_REQUEST);
+        }
+
+        const updatedProgress = user.progress + task.difficult;
+
+        return await this.prisma.user.update({
+            where: { id: user.id },
+            data: {
+                progress: updatedProgress
+            }
+        });
+
+    }
 
     // função que pega a quantidade de pontos para o proximo nivel (reachToNextLevel)
 

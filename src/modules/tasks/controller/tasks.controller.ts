@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from "@nestjs/common";
 import { TasksService } from "../services/tasks.service";
+import { UserService } from "src/modules/users/services/user.service";
 import { TaskDTO } from "../entities/taskDTO.entity";
 
 @Controller("/tasks")
 export class TasksController {
-    constructor(private readonly tasksService: TasksService) { }
+    constructor(private readonly tasksService: TasksService, private readonly userService: UserService) { }
 
     @Get()
     @HttpCode(HttpStatus.OK)
@@ -40,6 +41,8 @@ export class TasksController {
     @Patch('/:id')
     @HttpCode(HttpStatus.OK)
     async completeTask(@Param('id') taskId: string): Promise<TaskDTO> {
-        return this.tasksService.completeTask(taskId);
+        const taskAccomplished = await this.tasksService.completeTask(taskId);
+        await this.userService.getExperienceAndUpdateProgress(taskAccomplished);
+        return taskAccomplished;
     }
 }

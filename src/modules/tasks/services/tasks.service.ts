@@ -68,7 +68,7 @@ export class TasksService {
         if (!taskSearched || !taskId)
             throw new HttpException("A tarefa não existe!", HttpStatus.NOT_FOUND);
 
-        return await this.updateStatusTask(taskId, "Completa")
+        return await this.updateStatusTask(taskId, "Completa");
     }
 
     async updateStatusTaskIfLate(): Promise<void> {
