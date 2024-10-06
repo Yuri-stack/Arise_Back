@@ -42,15 +42,27 @@ export class UserService {
     }
 
     async update(user: UserDTO): Promise<UserDTO> {
-        let userSearched: UserDTO = await this.findUserByField("id", user.id);
+        const [emailSearched, usernameSearched, userSearched] = await Promise.all([
+            this.findUserByField("email", user.email),
+            this.findUserByField("username", user.username),
+            this.findUserByField("id", user.id)
+        ]);
 
         if (!userSearched || !user.id)
             throw new HttpException("Usuário não encontrado!", HttpStatus.NOT_FOUND);
 
+        if (usernameSearched)
+            throw new HttpException("Seu nome de Player já foi cadastrado!", HttpStatus.BAD_REQUEST);
+
+        if (emailSearched)
+            throw new HttpException("Email já cadastrado!", HttpStatus.BAD_REQUEST);
+
         return await this.prisma.user.update({
             where: { id: user.id },
             data: {
-                ...user
+                email: user.email,
+                username: user.username,
+                photo: user.photo,
             }
         });
     }
