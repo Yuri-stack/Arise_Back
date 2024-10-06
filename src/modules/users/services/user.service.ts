@@ -94,39 +94,32 @@ export class UserService {
 
     }
 
-    // private async levelUp(user: UserDTO) {
-    //     // const reachToNextLevel = calculatePointsForNextLevel(currentLevel);
+    async updateUserProgress(userId: string): Promise<object> {
+        const user = await this.findUserByField("id", userId);
 
-    //     // if (user.progress >= user.reachToNextLevel) {
-    //     //     user.level += 1;
-    //     //     user.progress = user.progress - reachToNextLevel;
-    //     // }
-
-    // }
-
-    async updateUserProgress(userId: string) {
-        const user = await this.findUserByField("id", userId)
-
-        let currentLevel: number = user.level;
-        let newProgress: number;
-        let newLevel: number;
-        let newReachToNextLevel: number;
-        const oldReachToNextLevel: number = user.reachToNextLevel;
-
+        // Verifico se a qtd atual de pontos é > ou = a qtd necessária para aumentar de nível
         if (user.progress >= user.reachToNextLevel) {
-            newReachToNextLevel = calculatePointsForNextLevel(currentLevel);
-            newProgress = user.progress - oldReachToNextLevel;
-            newLevel = user.level + 1;
+            const [newProgress, newLevel, newReachToNextLevel] = await this.levelUp(user);
+
+            const { username, level } = await this.prisma.user.update({
+                where: { id: userId },
+                data: {
+                    progress: newProgress,
+                    level: newLevel,
+                    reachToNextLevel: newReachToNextLevel
+                }
+            });
+
+            return {
+                title: `Mensagem do Sistema`,
+                message: `Parabéns ${username}! Você avançou para o nível ${level}`
+            }
         }
 
-        await this.prisma.user.update({
-            where: { id: userId },
-            data: {
-                progress: newProgress,
-                level: newLevel,
-                reachToNextLevel: newReachToNextLevel
-            }
-        });
+        return {
+            title: `Mensagem do Sistema`,
+            message: `Tarefa Concluída`
+        }
     }
 
     private async findUserByField(field: keyof UserDTO, value: string): Promise<UserDTO> {
@@ -139,5 +132,21 @@ export class UserService {
         );
 
         return user[0];
+    }
+
+    private async levelUp(user: UserDTO): Promise<number[]> {
+        // Pega o nível atual do usuário
+        const currentLevel: number = user.level;
+        // Pega o valor antigo para alcançar o próximo nível
+        const oldReachToNextLevel: number = user.reachToNextLevel;
+
+        // Calculo a nova quantidade de pontos para o próximo nível
+        const newReachToNextLevel: number = calculatePointsForNextLevel(currentLevel);
+        // Calculo a nova quantidade de pontos da barra de progresso após o processo de aumento de nível
+        const newProgress: number = user.progress - oldReachToNextLevel;
+        // Atualizo o nível do usuário
+        const newLevel: number = user.level + 1;
+
+        return [newProgress, newLevel, newReachToNextLevel];
     }
 }

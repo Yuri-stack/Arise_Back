@@ -19,10 +19,10 @@ export class TasksController {
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
     async findTaskById(@Param('id') taskId: string): Promise<TaskDTO> {
-        return await this.tasksService.findById(taskId)
+        return await this.tasksService.findById(taskId);
     }
 
-    @Get('/:status')
+    @Get('/status/:status')
     @HttpCode(HttpStatus.OK)
     async listTaskByStatus(@Param('status') status: string): Promise<TaskDTO[]> {
         return await this.tasksService.listTasksByStatus(status);
@@ -48,12 +48,11 @@ export class TasksController {
 
     @Patch('/:id')
     @HttpCode(HttpStatus.OK)
-    async completeTask(@Param('id') taskId: string): Promise<TaskDTO> {
+    async completeTask(@Param('id') taskId: string): Promise<object> {
         const taskAccomplished = await this.tasksService.completeTask(taskId);
 
-        await this.userService.getExperienceAndUpdateProgress(taskAccomplished)
-        await this.userService.updateUserProgress(taskAccomplished.user.id)
+        await this.userService.getExperienceAndUpdateProgress(taskAccomplished);
 
-        return taskAccomplished;
+        return await this.userService.updateUserProgress(taskAccomplished.user.id);
     }
 }
