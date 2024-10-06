@@ -16,7 +16,7 @@ model Tasks {
   type         String
   createdAt    DateTime @default(now())
   expirationAt String?
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId       String
 }
 
