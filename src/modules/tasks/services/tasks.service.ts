@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { TaskDTO } from "../entities/taskDTO.entity";
 import { PrismaService } from "src/prisma/prisma.service";
 import { setExpirationDate, setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
+import { UserDTO } from "src/modules/users/entities/userDTO.entity";
 
 @Injectable()
 export class TasksService {
@@ -22,6 +23,11 @@ export class TasksService {
     async create(task: TaskDTO): Promise<TaskDTO> {
         validateTypeOfTask(task.type)
 
+        let userOwner: UserDTO = await this.prisma.user.findUnique({ where: { id: task.user.id } })
+
+        if (!userOwner)
+            throw new HttpException("Usuário incorreto ou inexistente", HttpStatus.NOT_FOUND);
+
         return await this.prisma.tasks.create({
             data: {
                 ...task,
@@ -39,10 +45,16 @@ export class TasksService {
     async update(task: TaskDTO): Promise<TaskDTO> {
         validateTypeOfTask(task.type);
 
-        let taskSearched: TaskDTO = await this.findById(task.id);
+        const [taskSearched, userOwner] = await Promise.all([
+            this.findById(task.id),
+            this.prisma.user.findUnique({ where: { id: task.user.id } })
+        ])
 
         if (!taskSearched || !task.id)
             throw new HttpException("Tarefa não encontrada!", HttpStatus.NOT_FOUND);
+
+        if (!userOwner)
+            throw new HttpException("Usuário incorreto ou inexistente", HttpStatus.NOT_FOUND);
 
         return await this.prisma.tasks.update({
             where: { id: task.id },
