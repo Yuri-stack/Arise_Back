@@ -48,7 +48,10 @@ export class TasksController {
     @HttpCode(HttpStatus.OK)
     async completeTask(@Param('id') taskId: string): Promise<TaskDTO> {
         const taskAccomplished = await this.tasksService.completeTask(taskId);
-        await this.userService.getExperienceAndUpdateProgress(taskAccomplished);
+
+        await this.userService.getExperienceAndUpdateProgress(taskAccomplished)
+        await this.userService.updateUserProgress(taskAccomplished.user.id)
+
         return taskAccomplished;
     }
 }
