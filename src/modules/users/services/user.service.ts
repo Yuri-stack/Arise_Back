@@ -83,6 +83,8 @@ export class UserService {
     }
 
     // private async levelUp(user: UserDTO) {
+    //     // const reachToNextLevel = calculatePointsForNextLevel(currentLevel);
+
     //     // if (user.progress >= user.reachToNextLevel) {
     //     //     user.level += 1;
     //     //     user.progress = user.progress - reachToNextLevel;
@@ -90,24 +92,30 @@ export class UserService {
 
     // }
 
-    // async updateUserProgress(user: UserDTO) {
-    //     const currentLevel = user.level;
-    //     const reachToNextLevel = calculatePointsForNextLevel(currentLevel);
+    async updateUserProgress(userId: string) {
+        const user = await this.findUserByField("id", userId)
 
-    //     user.reachToNextLevel = reachToNextLevel;
+        let currentLevel: number = user.level;
+        let newProgress: number;
+        let newLevel: number;
+        let newReachToNextLevel: number;
+        const oldReachToNextLevel: number = user.reachToNextLevel;
 
-    //     if (user.progress >= user.reachToNextLevel) {
-    //         user.level += 1;
-    //         user.progress = user.progress - reachToNextLevel;
-    //     }
+        if (user.progress >= user.reachToNextLevel) {
+            newReachToNextLevel = calculatePointsForNextLevel(currentLevel);
+            newProgress = user.progress - oldReachToNextLevel;
+            newLevel = user.level + 1;
+        }
 
-    //     await this.prisma.user.update({
-    //         where: { id: user.id },
-    //         data: {
-    //             ...user
-    //         }
-    //     });
-    // }
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                progress: newProgress,
+                level: newLevel,
+                reachToNextLevel: newReachToNextLevel
+            }
+        });
+    }
 
     private async findUserByField(field: keyof UserDTO, value: string): Promise<UserDTO> {
         const allowedFields = ["id", "username", "email"];
