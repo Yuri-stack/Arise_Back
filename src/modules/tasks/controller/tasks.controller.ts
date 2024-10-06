@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { TaskDTO } from "../entities/taskDTO.entity";
 import { TasksService } from "../services/tasks.service";
 import { UserService } from "src/modules/users/services/user.service";
-import { TaskDTO } from "../entities/taskDTO.entity";
 
+@ApiTags("Tarefas - Tasks")
 @Controller("/tasks")
 export class TasksController {
     constructor(private readonly tasksService: TasksService, private readonly userService: UserService) { }
@@ -20,7 +22,7 @@ export class TasksController {
         return await this.tasksService.findById(taskId)
     }
 
-    @Get('/status/:status')
+    @Get('/:status')
     @HttpCode(HttpStatus.OK)
     async listTaskByStatus(@Param('status') status: string): Promise<TaskDTO[]> {
         return await this.tasksService.listTasksByStatus(status);
