@@ -55,6 +55,7 @@ Nas linhas abaixo, você terá acesso a versão da API para já começar a se fa
 - Nivelamente de Tarefas/Missões
 - Sistema de Níveis
 - Personalização de Perfil
+- Documentação com Swagger
 - E muito mais...
 
 *Para novas Funcionalidades verifique a Seção Funcionalidades Futuras*
