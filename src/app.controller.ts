@@ -1,4 +1,5 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller()
@@ -7,7 +8,14 @@ export class AppController {
 
     @ApiExcludeEndpoint()
     @Get()
-    async redirect(@Res() resposta: any) {
-        return resposta.redirect('/swagger');
+    redirect(@Res() response: any) {
+        return response.redirect('/swagger');
     }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('protected')
+    getProtected(@Req() req) {
+        return `Player ${req.user.username} conectado`
+    }
+
 }
