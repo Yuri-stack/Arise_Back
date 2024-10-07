@@ -1,22 +1,23 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './modules/auth/guard/jwt-auth.guard';
+import { Response } from 'express';
 
+@ApiTags("Autenticação - Authentication")
 @Controller()
 export class AppController {
     constructor() { }
 
     @ApiExcludeEndpoint()
     @Get()
-    redirect(@Res() response: any) {
+    redirect(@Res() response: Response) {
         return response.redirect('/swagger');
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('protected')
-    getProtected(@Req() req) {
-        return `Player ${req.user.username} conectado`
+    @Get('welcome')
+    getProtected(@Req() request) {
+        return `Player ${request.user.username} conectado`
     }
 
 }

@@ -1,29 +1,29 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { TaskDTO } from "../entities/task.dto.entity";
+import { TaskDto } from "../entities/task.dto.entity";
 import { PrismaService } from "src/prisma/prisma.service";
 import { setExpirationDate, setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
-import { UserDTO } from "src/modules/users/entities/user.dto.entity";
+import { UserDto } from "src/modules/users/entities/user.dto.entity";
 
 @Injectable()
 export class TasksService {
     constructor(private prisma: PrismaService) { }
 
-    async findAll(): Promise<TaskDTO[]> {
+    async findAll(): Promise<TaskDto[]> {
         return await this.prisma.tasks.findMany({ include: { user: true } });
     }
 
-    async findById(taskId: string): Promise<TaskDTO> {
+    async findById(taskId: string): Promise<TaskDto> {
         return await this.prisma.tasks.findUnique({ where: { id: taskId }, include: { user: true } })
     }
 
-    async listTasksByStatus(status: string): Promise<TaskDTO[]> {
+    async listTasksByStatus(status: string): Promise<TaskDto[]> {
         return await this.prisma.tasks.findMany({ where: { status }, include: { user: true } });
     }
 
-    async create(task: TaskDTO): Promise<TaskDTO> {
+    async create(task: TaskDto): Promise<TaskDto> {
         validateTypeOfTask(task.type)
 
-        let userOwner: UserDTO = await this.prisma.user.findUnique({ where: { id: task.user.id } })
+        let userOwner: UserDto = await this.prisma.user.findUnique({ where: { id: task.user.id } })
 
         if (!userOwner)
             throw new HttpException("Usuário incorreto ou inexistente", HttpStatus.NOT_FOUND);
@@ -42,7 +42,7 @@ export class TasksService {
         });
     }
 
-    async update(task: TaskDTO): Promise<TaskDTO> {
+    async update(task: TaskDto): Promise<TaskDto> {
         validateTypeOfTask(task.type);
 
         const [taskSearched, userOwner] = await Promise.all([
@@ -70,7 +70,7 @@ export class TasksService {
     }
 
     async delete(taskId: string): Promise<void> {
-        let taskSearched: TaskDTO = await this.findById(taskId);
+        let taskSearched: TaskDto = await this.findById(taskId);
 
         if (!taskSearched || !taskId)
             throw new HttpException("Tarefa não existe!", HttpStatus.NOT_FOUND);
@@ -78,8 +78,8 @@ export class TasksService {
         await this.prisma.tasks.delete({ where: { id: taskId } });
     }
 
-    async completeTask(taskId: string): Promise<TaskDTO> {
-        let taskSearched: TaskDTO = await this.findById(taskId);
+    async completeTask(taskId: string): Promise<TaskDto> {
+        let taskSearched: TaskDto = await this.findById(taskId);
 
         if (taskSearched.status === "Completa")
             throw new HttpException("A tarefa já foi Concluída!", HttpStatus.BAD_REQUEST);
@@ -92,7 +92,7 @@ export class TasksService {
 
     async updateStatusTaskIfLate(): Promise<void> {
         const actualDate: Date = new Date();
-        const tasks: TaskDTO[] = await this.findAll();
+        const tasks: TaskDto[] = await this.findAll();
 
         const updatedPromises = tasks.map(async task => {
             const expirationDate = new Date(task.expirationAt);
@@ -106,7 +106,7 @@ export class TasksService {
         await Promise.all(updatedPromises);
     }
 
-    private async updateStatusTask(taskId: string, status: string): Promise<TaskDTO> {
+    private async updateStatusTask(taskId: string, status: string): Promise<TaskDto> {
         return await this.prisma.tasks.update({
             where: { id: taskId },
             data: { status: status },
