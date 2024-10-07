@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { UserDTO } from "../entities/userDTO.entity";
+import { UserDto } from "../entities/user.dto.entity";
 import { UserService } from "../services/user.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
@@ -13,20 +13,20 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @Get()
     @HttpCode(HttpStatus.OK)
-    async findAllUser(): Promise<UserDTO[]> {
+    async findAllUser(): Promise<UserDto[]> {
         return await this.userService.findAll();
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('id/:id')
     @HttpCode(HttpStatus.OK)
-    async findUserById(@Param('id') userId: string): Promise<UserDTO> {
+    async findUserById(@Param('id') userId: string): Promise<UserDto> {
         return await this.userService.findById(userId);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() user: UserDTO): Promise<UserDTO> {
+    async create(@Body() user: UserDto): Promise<UserDto> {
         const initialLevel = 1;
         user.reachToNextLevel = calculatePointsForNextLevel(initialLevel);
         return await this.userService.create(user);
@@ -35,7 +35,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @Put()
     @HttpCode(HttpStatus.OK)
-    async update(@Body() user: UserDTO): Promise<UserDTO> {
+    async update(@Body() user: UserDto): Promise<UserDto> {
         return this.userService.update(user);
     }
 

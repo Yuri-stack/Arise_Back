@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { TaskDTO } from "../entities/taskDTO.entity";
+import { TaskDTO } from "../entities/task.dto.entity";
 import { PrismaService } from "src/prisma/prisma.service";
 import { setExpirationDate, setLevelOfDifficultToTask, validateTypeOfTask } from "src/utils/utilitiesForTasks";
-import { UserDTO } from "src/modules/users/entities/userDTO.entity";
+import { UserDTO } from "src/modules/users/entities/user.dto.entity";
 
 @Injectable()
 export class TasksService {

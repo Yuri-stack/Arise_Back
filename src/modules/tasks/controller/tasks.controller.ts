@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { TaskDTO } from "../entities/taskDTO.entity";
+import { TaskDto } from "../entities/task.dto.entity";
 import { TasksService } from "../services/tasks.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { UserService } from "src/modules/users/services/user.service";
@@ -13,32 +13,32 @@ export class TasksController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    async findAllTasks(): Promise<TaskDTO[]> {
+    async findAllTasks(): Promise<TaskDto[]> {
         await this.tasksService.updateStatusTaskIfLate();
         return await this.tasksService.findAll();
     }
 
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
-    async findTaskById(@Param('id') taskId: string): Promise<TaskDTO> {
+    async findTaskById(@Param('id') taskId: string): Promise<TaskDto> {
         return await this.tasksService.findById(taskId);
     }
 
     @Get('/status/:status')
     @HttpCode(HttpStatus.OK)
-    async listTaskByStatus(@Param('status') status: string): Promise<TaskDTO[]> {
+    async listTaskByStatus(@Param('status') status: string): Promise<TaskDto[]> {
         return await this.tasksService.listTasksByStatus(status);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() task: TaskDTO): Promise<TaskDTO> {
+    async create(@Body() task: TaskDto): Promise<TaskDto> {
         return await this.tasksService.create(task);
     }
 
     @Put()
     @HttpCode(HttpStatus.OK)
-    async update(@Body() task: TaskDTO): Promise<TaskDTO> {
+    async update(@Body() task: TaskDto): Promise<TaskDto> {
         return this.tasksService.update(task);
     }
 

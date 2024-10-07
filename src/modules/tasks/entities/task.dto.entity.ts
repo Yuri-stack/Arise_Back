@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNotEmpty, Length } from "class-validator";
-import { UserDTO } from "src/modules/users/entities/userDTO.entity";
+import { UserDto } from "src/modules/users/entities/user.dto.entity";
 
-export class TaskDTO {
+export class TaskDto {
 
   @ApiPropertyOptional()
   id: string;
@@ -38,5 +38,5 @@ export class TaskDTO {
 
   @ApiProperty()
   @IsNotEmpty({ message: 'O campo Usuário é Obrigatório' })
-  user: UserDTO;
+  user: UserDto;
 }
