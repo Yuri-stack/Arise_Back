@@ -5,6 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { UserDto } from "../entities/user.dto.entity";
 import { TaskDto } from "src/modules/tasks/entities/task.dto.entity";
 import { calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
+import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.constants";
 
 @Injectable()
 export class UserService {
@@ -12,10 +13,6 @@ export class UserService {
 
     async findAll(): Promise<UserDto[]> {
         return await this.prisma.user.findMany({ include: { tasks: true } })
-    }
-
-    async findById(userId: string): Promise<UserDto> {
-        return await this.prisma.user.findUnique({ where: { id: userId }, include: { tasks: true } })
     }
 
     async create(user: UserDto): Promise<UserDto> {
@@ -122,10 +119,8 @@ export class UserService {
         }
     }
 
-    async findUserByField(field: keyof UserDto, value: string): Promise<UserDto> {
-        const allowedFields = ["id", "username", "email"];
-
-        if (!allowedFields.includes(field)) throw new Error('Campo de pesquisa inválido');
+    async findUserByField(field: UserSearchFields, value: string): Promise<UserDto> {
+        if (!allowedFieldsForSearching.includes(field)) throw new Error('Campo de pesquisa inválido');
 
         const user = await this.prisma.$queryRaw<UserDto>(
             Prisma.sql`SELECT * FROM USER WHERE ${Prisma.raw(field)} = ${value};`
