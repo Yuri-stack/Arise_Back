@@ -92,7 +92,7 @@ export class TasksService {
 
     async updateStatusTaskIfLate(): Promise<void> {
         const actualDate: Date = new Date();
-        const tasks = await this.findAll();
+        const tasks: TaskDTO[] = await this.findAll();
 
         const updatedPromises = tasks.map(async task => {
             const expirationDate = new Date(task.expirationAt);

@@ -122,7 +122,7 @@ export class UserService {
         }
     }
 
-    private async findUserByField(field: keyof UserDTO, value: string): Promise<UserDTO> {
+    async findUserByField(field: keyof UserDTO, value: string): Promise<UserDTO> {
         const allowedFields = ["id", "username", "email"];
 
         if (!allowedFields.includes(field)) throw new Error('Campo de pesquisa inválido');
