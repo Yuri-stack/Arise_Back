@@ -55,6 +55,7 @@ Nas linhas abaixo, você terá acesso a versão da API para já começar a se fa
 - Nivelamente de Tarefas/Missões
 - Sistema de Níveis
 - Personalização de Perfil
+- Segurança e Login com Magic Link
 - Documentação com Swagger
 - E muito mais...
 
@@ -123,9 +124,9 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
+ - [X] Implementação de Segurança;
+ - [X] Estratégia Magic Link Login;
  - [ ] Listagem Dinâmica de Tarefas; 
- - [ ] Implementação de Segurança;
- - [ ] Estratégia Magic Link Login;
  - [ ] Sistema de Penalidade;
  - [ ] Controle de Acesso;
  - [ ] Winning Streak;

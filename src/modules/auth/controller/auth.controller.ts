@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { MagicLoginStrategy } from '../magiclogin.strategy';
+import { MagicLoginStrategy } from '../strategy/magiclogin.strategy';
 import { PasswordLessLoginDto } from '../entities/passwordless-login.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { MagicLinkAuthGuard } from '../guard/magic-link-auth.guard';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -11,16 +12,15 @@ export class AuthController {
     private strategy: MagicLoginStrategy) { }
 
   @Post('login')
-  async login(@Req() req, @Res() res, @Body() body: PasswordLessLoginDto) {
+  async login(@Req() req: Request, @Res() res: Response, @Body() body: PasswordLessLoginDto) {
     await this.authService.validateUser(body.destination);
 
     return this.strategy.send(req, res);
   }
 
-  @UseGuards(AuthGuard('magiclogin'))
+  @UseGuards(MagicLinkAuthGuard)
   @Get('login/callback')
   callback(@Req() req) {
-    // return req.user;
     return this.authService.generateTokens(req.user);
   }
 }

@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { TaskDTO } from "../entities/taskDTO.entity";
 import { TasksService } from "../services/tasks.service";
+import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { UserService } from "src/modules/users/services/user.service";
 
 @ApiTags("Tarefas - Tasks")
+@UseGuards(JwtAuthGuard)
 @Controller("/tasks")
 export class TasksController {
     constructor(private readonly tasksService: TasksService, private readonly userService: UserService) { }

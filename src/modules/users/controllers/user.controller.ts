@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UserDTO } from "../entities/userDTO.entity";
 import { UserService } from "../services/user.service";
+import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
 
 @ApiTags("Usuários - Users")
@@ -9,12 +10,14 @@ import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     @HttpCode(HttpStatus.OK)
     async findAllUser(): Promise<UserDTO[]> {
         return await this.userService.findAll();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('id/:id')
     @HttpCode(HttpStatus.OK)
     async findUserById(@Param('id') userId: string): Promise<UserDTO> {
@@ -29,12 +32,14 @@ export class UserController {
         return await this.userService.create(user);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put()
     @HttpCode(HttpStatus.OK)
     async update(@Body() user: UserDTO): Promise<UserDTO> {
         return this.userService.update(user);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id') userId: string): Promise<void> {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import Strategy from 'passport-magic-login';
-import { AuthService } from "./services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 @Injectable()
 export class MagicLoginStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +16,7 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
             callbackUrl: 'http://localhost:3000/auth/login/callback',
             sendMagicLink: async (destination, href) => {
                 // TODO: send email
-                this.logger.debug(`sending email to ${destination} wuth Link ${href}`);
+                this.logger.debug(`Sending email to ${destination} with Link ${href}`);
             },
             verify: async (payload, callback) =>
                 callback(null, this.validate(payload)),

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { difficultyMap, validTypes } from "src/constants/task.constants";
+import { difficultyMap, validTypes } from "src/modules/tasks/constants/task.constants";
 import { TaskDTO } from "src/modules/tasks/entities/taskDTO.entity";
 
 export function setLevelOfDifficultToTask(task: TaskDTO): number {
