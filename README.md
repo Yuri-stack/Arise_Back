@@ -123,9 +123,12 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
+ - [ ] Listagem Dinâmica de Tarefas; 
  - [ ] Implementação de Segurança;
+ - [ ] Estratégia Magic Link Login;
  - [ ] Sistema de Penalidade;
  - [ ] Controle de Acesso;
+ - [ ] Winning Streak;
  - [ ] Perfil com Patentes;
  - [ ] Deploy;
 
