@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { MailerService } from "@nestjs-modules/mailer";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { PrismaService } from "src/prisma/prisma.service";
@@ -9,7 +10,7 @@ import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.c
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private prisma: PrismaService, private readonly mailService: MailerService) { }
 
     async findAll(): Promise<UserDto[]> {
         return await this.prisma.user.findMany({ include: { tasks: true } })
@@ -127,6 +128,22 @@ export class UserService {
         );
 
         return user[0];
+    }
+
+    async sendLoginLink(to: string, content: string): Promise<void> {
+        const text = `
+        Seja muito bem vindo, player!
+        Você solicitou o login ao sistema. Clique no link abaixo:
+            
+        Link: ${content}
+        `;
+
+        await this.mailService.sendMail({
+            from: process.env.EMAIL_HOST,
+            to,
+            subject: "Link de Acesso - Arise",
+            text,
+        })
     }
 
     private async levelUp(user: UserDto): Promise<number[]> {
