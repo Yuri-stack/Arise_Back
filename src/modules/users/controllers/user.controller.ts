@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserDto } from "../entities/user.dto.entity";
 import { UserService } from "../services/user.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
@@ -7,6 +7,7 @@ import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
 
 @ApiTags("Usuários - Users")
 @Controller("/users")
+@ApiBearerAuth()
 export class UserController {
     constructor(private readonly userService: UserService) { }
 

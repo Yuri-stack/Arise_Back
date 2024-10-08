@@ -11,7 +11,7 @@ async function bootstrap() {
     .setDescription('Projeto Arise consiste em ser uma API de Gameficação de Tarefas')
     .setContact("Yuri Oliveira", "https://www.linkedin.com/in/yuri-silva99/", "yurioliveirsilva@gmail.com")
     .setVersion('1.0')
-    // .addBearerAuth()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
