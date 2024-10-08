@@ -1,3 +1,3 @@
 export const jwtConstants = {
-    secret: '',
+    secret: process.env.JWT_CONSTANT,
 };
