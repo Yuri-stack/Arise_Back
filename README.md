@@ -124,14 +124,9 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
- - [X] Implementação de Segurança;
- - [X] Estratégia Magic Link Login;
- - [ ] Listagem Dinâmica de Tarefas; 
  - [ ] Sistema de Penalidade;
- - [ ] Controle de Acesso;
- - [ ] Winning Streak;
  - [ ] Perfil com Patentes;
- - [ ] Deploy;
+ - [ ] Controle de Acesso;
 
 ## 🌐 Tecnologias
 
