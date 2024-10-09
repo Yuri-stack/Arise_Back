@@ -1,4 +1,7 @@
-<h1 align="center"> Arise - API</h1>
+<h1 align="center">
+	<img src="github/assets/logo.webp" alt="Logo"  width="240"><br><br>
+    Arise - API
+</h1>
 
 <p align="center">Missão [ Coragem do Mais Forte ] Iniciada!</p>
 <p align="center">O Sistema te dá os Parabéns! <br>Você foi escolhido(a) para ser um(a) <b>Player</b> </p><br>
