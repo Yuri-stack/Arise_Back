@@ -4,6 +4,7 @@ import { UserDto } from "../entities/user.dto.entity";
 import { UserService } from "../services/user.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { calculatePointsForNextLevel } from "src/utils/utilitiesForUsers";
+import { Roles } from "src/common/decorators/roles.decorator";
 
 @ApiTags("Usuários - Users")
 @Controller("/users")
@@ -13,6 +14,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
+    @Roles("admin")
     @HttpCode(HttpStatus.OK)
     async findAllUser(): Promise<UserDto[]> {
         return await this.userService.findAll();

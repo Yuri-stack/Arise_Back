@@ -6,14 +6,17 @@ import { MagicLoginStrategy } from './strategy/magiclogin.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { jwtConstants } from './constants/auth.constants';
 
 @Module({
-  imports: [UserModule, PassportModule, JwtModule.register({
-    secret: process.env.JWT_MODULE_SECRET,
-    signOptions: {
-      expiresIn: '1h'
-    }
-  })],
+  imports: [UserModule, PassportModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: {
+        expiresIn: '1h'
+      }
+    }),
+  ],
   controllers: [AuthController],
   providers: [AuthService, MagicLoginStrategy, JwtStrategy],
 })

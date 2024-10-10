@@ -10,7 +10,7 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
 
     constructor(private authService: AuthService, private userService: UserService) {
         super({
-            secret: process.env.MAGIC_LOGIN_STRATEGY_SECRET,
+            secret: process.env.JWT_CONSTANT,
             jwtOptions: {
                 expiresIn: '5m',
             },
