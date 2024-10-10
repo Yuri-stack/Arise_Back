@@ -4,6 +4,7 @@ import { TaskDto } from "../entities/task.dto.entity";
 import { TasksService } from "../services/tasks.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { UserService } from "src/modules/users/services/user.service";
+import { createMessage } from 'src/utils/utilitiesGlobal';
 
 @ApiTags("Tarefas - Tasks")
 @UseGuards(JwtAuthGuard)
@@ -56,6 +57,13 @@ export class TasksController {
 
         await this.userService.getExperienceAndUpdateProgress(taskAccomplished);
 
-        return await this.userService.updateUserProgress(taskAccomplished.user.id);
+        const user = await this.userService.checkProgressToLevelUp(taskAccomplished.user.id);
+
+        if (user) {
+            const { username, level } = user;
+            return createMessage(`Parabéns ${username}! Você avançou para o nível ${level}`);
+        }
+
+        return createMessage(`Tarefa Concluída`);
     }
 }

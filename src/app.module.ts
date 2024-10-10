@@ -19,7 +19,6 @@ import { ConfigModule } from '@nestjs/config';
           pass: process.env.EMAIL_PASSWORD
         },
       },
-      defaults: { from: '"No Reply" <no-reply@example.com>' },
     }),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
   ],

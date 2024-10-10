@@ -58,6 +58,7 @@ Nas linhas abaixo, você terá acesso a versão da API para já começar a se fa
 - Nivelamente de Tarefas/Missões
 - Sistema de Níveis
 - Personalização de Perfil
+- Perfil com Patentes;
 - Segurança e Login com Magic Link
 - Documentação com Swagger
 - E muito mais...
@@ -128,7 +129,6 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
  - [ ] Sistema de Penalidade;
- - [ ] Perfil com Patentes;
  - [ ] Controle de Acesso;
 
 ## 🌐 Tecnologias

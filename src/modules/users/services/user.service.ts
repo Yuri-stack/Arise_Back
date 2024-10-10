@@ -5,7 +5,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDto } from "../entities/user.dto.entity";
 import { TaskDto } from "src/modules/tasks/entities/task.dto.entity";
-import { calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
+import { calculateNewRank, calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
 import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.constants";
 
 @Injectable()
@@ -92,32 +92,35 @@ export class UserService {
 
     }
 
-    async updateUserProgress(userId: string): Promise<object> {
-        const user = await this.findUserByField("id", userId);
+    async checkProgressToLevelUp(userId: string): Promise<{ username: string, level: number }> {
+        const user: UserDto = await this.findUserByField("id", userId);
+        let rankUser = user.rank;
 
         // Verifico se a qtd atual de pontos é > ou = a qtd necessária para aumentar de nível
         if (user.progress >= user.reachToNextLevel) {
-            const [newProgress, newLevel, newReachToNextLevel] = await this.levelUp(user);
+            const [newProgress, newLevel, newReachToNextLevel] = this.levelUp(user);
+
+            // Chama a função para verificar rank
+            const newRank = calculateNewRank(newLevel);
+
+            // Se newRAnk for !null, atualiza a variavel rankUser
+            if (newRank)
+                rankUser = newRank;
 
             const { username, level } = await this.prisma.user.update({
                 where: { id: userId },
                 data: {
                     progress: newProgress,
                     level: newLevel,
-                    reachToNextLevel: newReachToNextLevel
+                    reachToNextLevel: newReachToNextLevel,
+                    rank: rankUser
                 }
             });
 
-            return {
-                title: `Mensagem do Sistema`,
-                message: `Parabéns ${username}! Você avançou para o nível ${level}`
-            }
+            return { username, level }
         }
 
-        return {
-            title: `Mensagem do Sistema`,
-            message: `Tarefa Concluída`
-        }
+        return
     }
 
     async findUserByField(field: UserSearchFields, value: string): Promise<UserDto> {
@@ -131,22 +134,21 @@ export class UserService {
     }
 
     async sendLoginLink(to: string, content: string): Promise<void> {
-        const text = `
-        Seja muito bem vindo, player!
-        Você solicitou o login ao sistema. Clique no link abaixo:
-            
-        Link: ${content}
-        `;
-
         await this.mailService.sendMail({
-            from: process.env.EMAIL_HOST,
             to,
-            subject: "Link de Acesso - Arise",
-            text,
+            from: '<no-reply@arise.com>',
+            subject: "Link de Acesso ao Sistema - Arise",
+            html: `
+            <h1>Saudações Player!</h1>
+            <p>Seu login ao Sistema foi criado com sucesso!</p>
+            <p>
+                Faça seu primeiro acesso clicando <a href=${content}>aqui</a>.
+            </p>
+        `
         })
     }
 
-    private async levelUp(user: UserDto): Promise<number[]> {
+    private levelUp(user: UserDto): number[] {
         // Pega o nível atual do usuário
         const currentLevel: number = user.level;
         // Pega o valor antigo para alcançar o próximo nível
