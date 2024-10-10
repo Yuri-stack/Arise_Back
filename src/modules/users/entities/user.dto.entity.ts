@@ -22,6 +22,9 @@ export class UserDto {
     role?: string;
 
     @ApiPropertyOptional()
+    rank: string;
+
+    @ApiPropertyOptional()
     level?: number;
 
     @ApiProperty()

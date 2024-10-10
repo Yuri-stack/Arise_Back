@@ -24,7 +24,8 @@ model User {
   id               String  @id @default(uuid())
   username         String  @db.VarChar(50)
   email            String
-  role             String? @default("player")
+  role             String? @default("Player")
+  rank             String? @default("Iniciante")
   level            Int?    @default(1)
   photo            String
   progress         Int?    @default(0)
