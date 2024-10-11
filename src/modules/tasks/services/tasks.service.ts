@@ -99,7 +99,7 @@ export class TasksService {
         const tasks: TaskDto[] = await this.findAll();
 
         const updatedPromises = tasks.map(async task => {
-            const expirationDate = new Date(task.expirationAt);
+            const expirationDate: Date = new Date(task.expirationAt);
 
             // Verifica se a tarefa está atrasada e não foi concluída
             if ((actualDate > expirationDate) && task.status !== "Completa") {
@@ -108,6 +108,11 @@ export class TasksService {
 
         })
         await Promise.all(updatedPromises);
+    }
+
+    async countTasksLate(): Promise<number> {
+        const quantity: number = await this.prisma.tasks.count({ where: { status: 'Atrasada' } });
+        return quantity;
     }
 
     private async updateStatusTask(taskId: string, status: string): Promise<TaskDto> {

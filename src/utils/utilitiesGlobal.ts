@@ -1,8 +1,10 @@
-export const createMessage = (message: string, title?: string) => {
-    let defaultTitle: string = "Mensagem do Sistema";
+export const createMessage = (text: string, header?: string) => {
+    let title: string = "Mensagem do Sistema";
 
-    if (title)
-        return { title, message };
+    if (header) {
+        title = header;
+        return { title, text };
+    }
 
-    return { defaultTitle, message };
+    return { title, text };
 };

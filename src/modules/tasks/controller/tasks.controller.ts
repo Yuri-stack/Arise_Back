@@ -24,9 +24,13 @@ export class TasksController {
 
     @Get('/my-tasks/:ownerId')
     @HttpCode(HttpStatus.OK)
-    async findAllMyTasks(@Param('ownerId') ownerId: string): Promise<Omit<TaskDto, 'user' | 'userId'>[]> {
+    async findAllMyTasks(@Param('ownerId') ownerId: string) {
         await this.tasksService.updateStatusTaskIfLate();
-        return await this.tasksService.findAllByOwner(ownerId);
+
+        const tasksLate = await this.tasksService.countTasksLate();
+        const myTasks = await this.tasksService.findAllByOwner(ownerId);
+
+        return { tasksLate, myTasks }
     }
 
     @Get('/:id')
