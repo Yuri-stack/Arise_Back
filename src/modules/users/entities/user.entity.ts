@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, Length } from "class-validator";
 
-export class UserDto {
+export class UserEntity {
 
     @ApiPropertyOptional()
     id: string;

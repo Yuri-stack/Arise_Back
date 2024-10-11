@@ -3,8 +3,8 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { PrismaService } from "src/prisma/prisma.service";
-import { UserDto } from "../entities/user.dto.entity";
-import { TaskDto } from "src/modules/tasks/entities/task.dto.entity";
+import { UserEntity } from "../entities/user.entity";
+import { TaskEntity } from "src/modules/tasks/entities/task.entity";
 import { calculateNewRank, calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
 import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.constants";
 
@@ -12,11 +12,11 @@ import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.c
 export class UserService {
     constructor(private prisma: PrismaService, private readonly mailService: MailerService) { }
 
-    async findAll(): Promise<UserDto[]> {
+    async findAll(): Promise<UserEntity[]> {
         return await this.prisma.user.findMany({ include: { tasks: true } })
     }
 
-    async create(user: UserDto): Promise<UserDto> {
+    async create(user: UserEntity): Promise<UserEntity> {
         const [emailSearched, usernameSearched] = await Promise.all([
             this.findUserByField("email", user.email),
             this.findUserByField("username", user.username)
@@ -39,7 +39,7 @@ export class UserService {
         });
     }
 
-    async update(user: UserDto): Promise<UserDto> {
+    async update(user: UserEntity): Promise<UserEntity> {
         const [emailSearched, usernameSearched, userSearched] = await Promise.all([
             this.findUserByField("email", user.email),
             this.findUserByField("username", user.username),
@@ -66,7 +66,7 @@ export class UserService {
     }
 
     async delete(userId: string): Promise<void> {
-        let userSearched: UserDto = await this.findUserByField("id", userId);
+        let userSearched: UserEntity = await this.findUserByField("id", userId);
 
         if (!userSearched || !userId)
             throw new HttpException("Usuário não existe!", HttpStatus.NOT_FOUND);
@@ -74,8 +74,8 @@ export class UserService {
         await this.prisma.user.delete({ where: { id: userId } });
     }
 
-    async getExperienceAndUpdateProgress(task: TaskDto) {
-        let user: UserDto = task.user;
+    async getExperienceAndUpdateProgress(task: TaskEntity) {
+        let user: UserEntity = task.user;
 
         if (task.status !== "Completa") {
             throw new HttpException("Tarefa não concluída", HttpStatus.BAD_REQUEST);
@@ -93,7 +93,7 @@ export class UserService {
     }
 
     async checkProgressToLevelUp(userId: string): Promise<{ username: string, level: number }> {
-        const user: UserDto = await this.findUserByField("id", userId);
+        const user: UserEntity = await this.findUserByField("id", userId);
         let rankUser = user.rank;
 
         // Verifico se a qtd atual de pontos é > ou = a qtd necessária para aumentar de nível
@@ -123,10 +123,10 @@ export class UserService {
         return
     }
 
-    async findUserByField(field: UserSearchFields, value: string): Promise<UserDto> {
+    async findUserByField(field: UserSearchFields, value: string): Promise<UserEntity> {
         if (!allowedFieldsForSearching.includes(field)) throw new Error('Campo de pesquisa inválido');
 
-        const user = await this.prisma.$queryRaw<UserDto>(
+        const user = await this.prisma.$queryRaw<UserEntity>(
             Prisma.sql`SELECT * FROM USER WHERE ${Prisma.raw(field)} = ${value};`
         );
 
@@ -148,7 +148,7 @@ export class UserService {
         })
     }
 
-    private levelUp(user: UserDto): number[] {
+    private levelUp(user: UserEntity): number[] {
         // Pega o nível atual do usuário
         const currentLevel: number = user.level;
         // Pega o valor antigo para alcançar o próximo nível

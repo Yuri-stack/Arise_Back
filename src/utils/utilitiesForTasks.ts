@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { difficultyMap, validTypes } from "src/modules/tasks/constants/task.constants";
-import { TaskDto } from "src/modules/tasks/entities/task.dto.entity";
+import { TaskEntity } from "src/modules/tasks/entities/task.entity";
 
-export function setLevelOfDifficultToTask(task: TaskDto): number {
+export function setLevelOfDifficultToTask(task: TaskEntity): number {
     const difficultUpdated: number = difficultyMap[task.type] || 0;
     return difficultUpdated;
 }
@@ -13,7 +13,7 @@ export function validateTypeOfTask(taskType: string) {
     }
 }
 
-export function setExpirationDate(task: TaskDto): string {
+export function setExpirationDate(task: TaskEntity): string {
     // Define a data de criação da tarefa
     task.createdAt = new Date();
     const creationDate: Date = task.createdAt;

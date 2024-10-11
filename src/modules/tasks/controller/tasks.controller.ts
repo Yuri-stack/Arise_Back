@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { TaskDto } from "../entities/task.dto.entity";
+import { TaskEntity } from "../entities/task.entity";
 import { TasksService } from "../services/tasks.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { UserService } from "src/modules/users/services/user.service";
@@ -17,12 +17,12 @@ export class TasksController {
     @Get()
     @Roles("admin")
     @HttpCode(HttpStatus.OK)
-    async findAllTasks(): Promise<TaskDto[]> {
+    async findAllTasks(): Promise<TaskEntity[]> {
         await this.tasksService.updateStatusTaskIfLate();
         return await this.tasksService.findAll();
     }
 
-    @Get('/my-tasks/:ownerId')
+    @Get('/:ownerId')
     @HttpCode(HttpStatus.OK)
     async findAllMyTasks(@Param('ownerId') ownerId: string) {
         await this.tasksService.updateStatusTaskIfLate();
@@ -35,25 +35,25 @@ export class TasksController {
 
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
-    async findTaskById(@Param('id') taskId: string): Promise<TaskDto> {
+    async findTaskById(@Param('id') taskId: string): Promise<TaskEntity> {
         return await this.tasksService.findById(taskId);
     }
 
     @Get('/status/:status')
     @HttpCode(HttpStatus.OK)
-    async listTaskByStatus(@Param('status') status: string): Promise<TaskDto[]> {
+    async listTaskByStatus(@Param('status') status: string): Promise<TaskEntity[]> {
         return await this.tasksService.listTasksByStatus(status);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() task: TaskDto): Promise<TaskDto> {
+    async create(@Body() task: TaskEntity): Promise<TaskEntity> {
         return await this.tasksService.create(task);
     }
 
     @Put()
     @HttpCode(HttpStatus.OK)
-    async update(@Body() task: TaskDto): Promise<TaskDto> {
+    async update(@Body() task: TaskEntity): Promise<TaskEntity> {
         return this.tasksService.update(task);
     }
 
