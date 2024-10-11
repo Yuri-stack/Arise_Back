@@ -5,6 +5,7 @@ import { TasksService } from "../services/tasks.service";
 import { JwtAuthGuard } from "src/modules/auth/guard/jwt-auth.guard";
 import { UserService } from "src/modules/users/services/user.service";
 import { createMessage } from 'src/utils/utilitiesGlobal';
+import { Roles } from "src/common/decorators/roles.decorator";
 
 @ApiTags("Tarefas - Tasks")
 @UseGuards(JwtAuthGuard)
@@ -14,10 +15,18 @@ export class TasksController {
     constructor(private readonly tasksService: TasksService, private readonly userService: UserService) { }
 
     @Get()
+    @Roles("admin")
     @HttpCode(HttpStatus.OK)
     async findAllTasks(): Promise<TaskDto[]> {
         await this.tasksService.updateStatusTaskIfLate();
         return await this.tasksService.findAll();
+    }
+
+    @Get('/my-tasks/:ownerId')
+    @HttpCode(HttpStatus.OK)
+    async findAllMyTasks(@Param('ownerId') ownerId: string): Promise<Omit<TaskDto, 'user' | 'userId'>[]> {
+        await this.tasksService.updateStatusTaskIfLate();
+        return await this.tasksService.findAllByOwner(ownerId);
     }
 
     @Get('/:id')

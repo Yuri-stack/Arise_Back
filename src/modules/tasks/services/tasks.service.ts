@@ -12,6 +12,10 @@ export class TasksService {
         return await this.prisma.tasks.findMany({ include: { user: true } });
     }
 
+    async findAllByOwner(ownerId: string): Promise<Omit<TaskDto, 'user' | 'userId'>[]> {
+        return await this.prisma.tasks.findMany({ where: { userId: ownerId } })
+    }
+
     async findById(taskId: string): Promise<TaskDto> {
         return await this.prisma.tasks.findUnique({ where: { id: taskId }, include: { user: true } })
     }
