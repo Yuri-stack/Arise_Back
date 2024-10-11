@@ -127,7 +127,7 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
- - [ ] Sistema de Penalidade;
+*Aguardamos novas ideias*
 
 ## 🌐 Tecnologias
 
