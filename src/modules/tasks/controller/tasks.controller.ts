@@ -19,13 +19,16 @@ export class TasksController {
     @HttpCode(HttpStatus.OK)
     async findAllTasks(): Promise<TaskEntity[]> {
         await this.tasksService.updateStatusTaskIfLate();
+        await this.tasksService.reloadDailyTasksUntilReachExpiration();
+
         return await this.tasksService.findAll();
     }
 
-    @Get('/:ownerId')
+    @Get('/owner/:ownerId')
     @HttpCode(HttpStatus.OK)
     async findAllMyTasks(@Param('ownerId') ownerId: string) {
         await this.tasksService.updateStatusTaskIfLate();
+        await this.tasksService.reloadDailyTasksUntilReachExpiration();
 
         const tasksLate = await this.tasksService.countTasksLate();
         const myTasks = await this.tasksService.findAllByOwner(ownerId);
@@ -66,7 +69,7 @@ export class TasksController {
     @Patch('/:id')
     @HttpCode(HttpStatus.OK)
     async completeTask(@Param('id') taskId: string): Promise<object> {
-        const taskAccomplished = await this.tasksService.completeTask(taskId);
+        const taskAccomplished: TaskEntity = await this.tasksService.completeTask(taskId);
 
         await this.userService.getExperienceAndUpdateProgress(taskAccomplished);
 

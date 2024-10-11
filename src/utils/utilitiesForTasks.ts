@@ -20,7 +20,7 @@ export function setExpirationDate(task: TaskEntity): string {
 
     // Mapa para associar tipos de tarefa com a quantidade de dias de expiração
     const expirationDayMap: { [key: string]: number } = {
-        "Diária": 365,
+        "Diária": 1,
         "Semanal": 7,
         "Mensal": 30,
     };

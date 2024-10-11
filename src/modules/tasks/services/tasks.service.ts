@@ -98,7 +98,7 @@ export class TasksService {
         const actualDate: Date = new Date();
         const tasks: TaskEntity[] = await this.findAll();
 
-        const updatedPromises = tasks.map(async task => {
+        const updatedTasks = tasks.map(async task => {
             const expirationDate: Date = new Date(task.expirationAt);
 
             // Verifica se a tarefa está atrasada e não foi concluída
@@ -107,12 +107,28 @@ export class TasksService {
             }
 
         })
-        await Promise.all(updatedPromises);
+        await Promise.all(updatedTasks);
     }
 
     async countTasksLate(): Promise<number> {
         const quantity: number = await this.prisma.tasks.count({ where: { status: 'Atrasada' } });
         return quantity;
+    }
+
+    async reloadDailyTasksUntilReachExpiration(): Promise<void> {
+        const actualDate: Date = new Date();
+        const tasks: TaskEntity[] = await this.findAll();
+
+        const updatedDailyTasks = tasks.map(async task => {
+
+            if ((actualDate === new Date(task.expirationAt)) && task.status === "Completa" && task.type === "Diária") {
+                task.createdAt = new Date(task.expirationAt + 1);
+                await this.update(task);
+            }
+
+        })
+        await Promise.all(updatedDailyTasks);
+
     }
 
     private async updateStatusTask(taskId: string, status: string): Promise<TaskEntity> {
