@@ -57,11 +57,10 @@ Nas linhas abaixo, você terá acesso a versão da API para já começar a se fa
 - Gameficação de Tarefas
 - Nivelamente de Tarefas/Missões
 - Sistema de Níveis
-- Personalização de Perfil
-- Perfil com Patentes;
+- Personalização de Perfil com Patentes
 - Segurança e Login com Magic Link
+- Controle de Acesso com Perfil(Roles)
 - Documentação com Swagger
-- E muito mais...
 
 *Para novas Funcionalidades verifique a Seção Funcionalidades Futuras*
 
@@ -129,7 +128,6 @@ Após os passos anteriores, abra em seu navegador o projeto acessando a endereç
 Veja abaixo as próximas Funcionalidades que serão adicionadas ao projeto:
 
  - [ ] Sistema de Penalidade;
- - [ ] Controle de Acesso;
 
 ## 🌐 Tecnologias
 
