@@ -109,7 +109,18 @@ yarn
 
 *Tenha certeza que sua internet esteja estável, pois esse processo pode levar um tempo*
 
-**Passo 3 - Execute a API**
+**Passo 3 - Configurando as Variáveis de Ambiente**
+
+* Renomeie o arquivo **env.local** para **.env**;
+* Preencha as informações do arquivo corretamente;
+
+**Passo 4 - Criando o Banco de Dados**
+
+Execute as *migrates* do Prisma
+
+    npx prisma migrate dev
+
+**Passo 5 - Execute a API**
 
 ```bash
 npm run dev
@@ -120,7 +131,7 @@ ou
 yarn dev
 ```
 
-Após os passos anteriores, abra em seu navegador o projeto acessando a endereço: http://localhost:3000
+Após os passos anteriores, abra em seu navegador o projeto acessando a endereço: http://localhost:3000/swagger
 
 
 ## 🚧 Funcionalidades Futuras
