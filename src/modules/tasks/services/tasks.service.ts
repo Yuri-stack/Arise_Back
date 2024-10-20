@@ -110,8 +110,9 @@ export class TasksService {
         await Promise.all(updatedTasks);
     }
 
-    async countTasksLate(): Promise<number> {
-        const quantity: number = await this.prisma.tasks.count({ where: { status: 'Atrasada' } });
+    async countTasksByStatus(ownerId: string, statusSearch: string): Promise<number> {
+        const quantity: number = await this.prisma.tasks.count(
+            { where: { AND: [{ status: statusSearch }, { userId: ownerId }] } });
         return quantity;
     }
 

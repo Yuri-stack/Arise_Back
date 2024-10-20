@@ -30,10 +30,12 @@ export class TasksController {
         await this.tasksService.updateStatusTaskIfLate();
         await this.tasksService.reloadDailyTasksUntilReachExpiration();
 
-        const tasksLate = await this.tasksService.countTasksLate();
+        const tasksLate = await this.tasksService.countTasksByStatus(ownerId, 'Atrasada');
+        const tasksFinished = await this.tasksService.countTasksByStatus(ownerId, 'Completa');
+        const taskPending = await this.tasksService.countTasksByStatus(ownerId, 'Pendente');
         const myTasks = await this.tasksService.findAllByOwner(ownerId);
 
-        return { tasksLate, myTasks }
+        return { tasksLate, tasksFinished, taskPending, myTasks };
     }
 
     @Get('/:id')
