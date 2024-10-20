@@ -120,7 +120,18 @@ Execute as *migrates* do Prisma
 
     npx prisma migrate dev
 
-**Passo 5 - Execute a API**
+**Passo 5 - Popule o Banco de Dados**
+
+```bash
+npm run seed
+```
+ou
+
+```bash
+yarn seed
+```
+
+**Passo 6 - Execute a API**
 
 ```bash
 npm run dev
