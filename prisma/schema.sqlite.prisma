@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:memory.sqlite?mode=memory&cache=shared"
+}
+
+model Tasks {
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  difficult    Int?
+  status       String?
+  type         String
+  createdAt    DateTime @default(now())
+  expirationAt String?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+}
+
+model User {
+  id               String  @id @default(uuid())
+  username         String
+  email            String
+  role             String? @default("Player")
+  rank             String? @default("Iniciante")
+  level            Int?    @default(1)
+  photo            String
+  progress         Int?    @default(0)
+  reachToNextLevel Int?    @default(0)
+  tasks            Tasks[]
+}

@@ -1,4 +1,4 @@
-import { rankList } from "src/modules/users/constants/user.constants";
+import { rankList } from "../modules/users/constants/user.constants";
 
 export function isValidImage(photo: string): boolean {
     const allowedExtensions = ['jpg', 'jpeg', 'png'];

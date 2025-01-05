@@ -1,11 +1,10 @@
-import { Prisma } from "@prisma/client";
 import { MailerService } from "@nestjs-modules/mailer";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../../../prisma/prisma.service";
 import { UserEntity } from "../entities/user.entity";
-import { TaskEntity } from "src/modules/tasks/entities/task.entity";
-import { calculateNewRank, calculatePointsForNextLevel, isValidImage } from "src/utils/utilitiesForUsers";
+import { TaskEntity } from "../../../modules/tasks/entities/task.entity";
+import { calculateNewRank, calculatePointsForNextLevel, isValidImage } from "../../../utils/utilitiesForUsers";
 import { allowedFieldsForSearching, UserSearchFields } from "../constants/user.constants";
 
 @Injectable()
@@ -126,11 +125,13 @@ export class UserService {
     async findUserByField(field: UserSearchFields, value: string): Promise<UserEntity> {
         if (!allowedFieldsForSearching.includes(field)) throw new Error('Campo de pesquisa inválido');
 
-        const user = await this.prisma.$queryRaw<UserEntity>(
-            Prisma.sql`SELECT * FROM USER WHERE ${Prisma.raw(field)} = ${value};`
-        );
+        const user = await this.prisma.user.findFirst({
+            where: {
+                [field]: value
+            }
+        });
 
-        return user[0];
+        return user;
     }
 
     async sendLoginLink(to: string, content: string): Promise<void> {
