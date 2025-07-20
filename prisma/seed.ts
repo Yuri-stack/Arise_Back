@@ -26,7 +26,7 @@ async function createFakeUsers() {
     while (users.length < 5) {
         users.push({
             id: faker.string.uuid(),
-            username: faker.internet.userName(),
+            username: faker.internet.username,
             email: faker.internet.email().toLocaleLowerCase(),
             role: "Player",
             rank: "Iniciante",
